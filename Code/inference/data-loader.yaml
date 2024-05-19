@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: data-loader
+spec:
+  containers:
+  - name: data-loader
+    image: google/cloud-sdk  # This image has gsutil for accessing GCS if needed
+    command: ["sh", "-c", "echo Waiting for files to be placed; while true; do sleep 30; done"]
+    volumeMounts:
+    - mountPath: "/data"
+      name: data-volume
+  volumes:
+  - name: data-volume
+    persistentVolumeClaim:
+      claimName: pvc-storage-project # Ensure this matches the PVC used by your main application
+  restartPolicy: Never

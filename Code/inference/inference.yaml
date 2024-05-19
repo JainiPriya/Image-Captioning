@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-job
+  labels:
+    app: inference-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inference-app
+  template:
+    metadata:
+      labels:
+        app: inference-app
+    spec:
+      containers:
+      - name: inference-container
+        image: sidoodler/inference_image_project:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 7860
+        volumeMounts:
+        - mountPath: "/data"
+          name: data-volume
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: pvc-storage-project
